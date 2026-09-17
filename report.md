@@ -1,62 +1,84 @@
-# KRAS pocket-region reliability report
+# KRAS construct-specific reliability report
 
 ## 1. The question
 
-Dr. Yuki Tanaka needs one defensible region to prioritise in Friday’s medicinal-chemistry design review: the P-loop, switch I, or switch II around the KRAS nucleotide pocket. The answer will guide which residues the team records in its compound-design protocol; it is a model-reliability decision, not a claim that a compound binds.
+Dr. Yuki Tanaka needs a defensible region to prioritise in Friday’s compound-design review: the P-loop, switch I, or switch II around the KRAS nucleotide site. The answer is about model reliability and provisional design guidance; it does **not** assign a primary ligand pocket.
 
-**Recommendation up front:** on the supplied model, prioritise the **P-loop, residues 10–17**, as the most reliable of the three candidate regions. Treat this as provisional design guidance only.
+## 2. The headline mismatch
 
-## 2. The protein & the files
+Before ranking the regions, the models must be distinguished:
 
-The owner supplied one KRAS polypeptide chain and an assay FASTA for **KRAS G12D, residues 1–169**. The structure is `data/KRAS_alphafold_model.cif`, a predicted single-chain ordinary KRAS AlphaFold model covering residues 1–189, not an experimental nucleotide-loaded structure. `data/KRAS_alphafold_pae.json` supplies the 189 × 189 predicted-aligned-error matrix. The sequence reference is `data/my_construct.fasta` (169 residues).
+| | WT AlphaFold reference | Actual assay construct fold |
+|---|---|---|
+| Sequence at 12 | KRAS **G12** | KRAS **G12D**: **D12** |
+| Coverage | residues **1–189** | residues **1–169** |
+| Model type | computational single-chain prediction | computational single-chain fold-service prediction |
+| Nucleotide state | not defined | not defined |
 
-The comparison used only residues 1–169. The main limitation is that the supplied model is not the exact assay construct and has no defined GDP/GTP state. No multi-chain assembly or interface analysis is applicable.
+D12 lies inside the P-loop comparison range, residues 10–17. The two computational predictions therefore do not represent exactly the same sequence or construct. This difference supports caution; it does not by itself establish a biological conformational change.
 
 ## 3. The right confidence, stated plainly
 
-For this fold/region claim, the matching evidence is **per-residue pLDDT**, not a whole-protein average. The relevant values are:
+For a local fold claim, the relevant evidence is per-residue pLDDT. PAE answers a different question: uncertainty in relative placement. A pLDDT difference is not a PAE difference, and neither is a measurement of biological mechanism.
 
-| Region | Residues | pLDDT median | Mean | Minimum | Q1 |
-|---|---:|---:|---:|---:|---:|
-| P-loop | 10–17 | **96.53** | **95.97** | **93.94** | 95.00 |
-| Switch I | 30–38 | 83.31 | 83.47 | 77.75 | 81.62 |
-| Switch II | 59–76 | 87.07 | 85.85 | 73.06 | 78.84 |
-| Switch II core | 59–67 | 78.75 | — | 73.06 | 76.81 |
+### WT versus actual G12D construct
 
-For relative placement, PAE gives: P-loop–switch I **5 Å median, 6 Å P90**; P-loop–switch II **4 Å median, 6 Å P90**; switch I–switch II **13 Å median, 17 Å P90**. Within-region off-diagonal PAE is **1 Å** for the P-loop, **6 Å** for switch I, **5 Å** for switch II, and **6 Å** for the switch II core.
+| Region | WT AlphaFold median / mean / minimum pLDDT | G12D construct median / mean / minimum pLDDT |
+|---|---:|---:|
+| P-loop 10–17 | **96.53 / 95.97 / 93.94** | **87.05 / 86.94 / 80.13** |
+| Switch I 30–38 | **83.31 / 83.47 / 77.75** | **68.17 / 68.27 / 62.00** |
+| Switch II 59–76 | **87.07 / 85.85 / 73.06** | **65.59 / 67.26 / 45.12** |
+| Switch II core 59–67 | **78.75 / not previously reported / 73.06** | **57.44 / 55.84 / 45.12** |
 
-The pLDDT-coloured structure in the viewer and the PAE heatmap agree with these numbers: the P-loop is uniformly high-confidence and internally tight; switch I is lower; switch II is mixed, with its 59–67 core weakest.
+WT G12 has pLDDT **93.94**; construct D12 has pLDDT **80.13**. The WT-to-construct P-loop change is therefore −9.49 in the median and −13.81 in the minimum. These are differences between two predictions, not proof that G12D causes a conformational change.
 
-## 4. The structure check
+## 4. PAE comparison
 
-This is a KRAS identity match, not an exact construct match. The model is one chain, chain A, with residues 1–189. The assay FASTA is one chain of 169 residues. Direct residue-number mapping is clean through 169: no gaps, insertion codes, or alternate records affect these regions.
+The construct fold returned one chain of 169 residues and a **169 × 169** PAE matrix. Residue numbers map directly to matrix index `residue − 1`.
 
-There is one sequence difference within residues 1–169:
+### Between-region PAE, Å
 
-```text
-position 12: model G  | assay D  (G12D)
-```
+| Region pair | WT median / Q3 / P90 | G12D median / Q3 / P90 |
+|---|---:|---:|
+| P-loop × switch I | 5 / 5 / 6 | **3.10 / 3.34 / 3.44** |
+| P-loop × switch II | 4 / 5 / 6 | **3.20 / 4.36 / 4.80** |
+| Switch I × switch II | 13 / 15 / 17 | **8.53 / 9.38 / 10.45** |
 
-The model also has residues 170–189, absent from the trimmed assay construct; these were excluded. The model is a monomeric chain, and this dataset does not support a functional dimer or protein–protein interface interpretation.
+### Within-region PAE, off-diagonal median, Å
 
-## 5. The trap and the honest truth
+| Region | WT | G12D construct (median / Q3 / P90) |
+|---|---:|---:|
+| P-loop 10–17 | 1.0 | **1.03 / 1.22 / 1.40** |
+| Switch I 30–38 | 6.0 | **3.47 / 5.52 / 6.75** |
+| Switch II 59–76 | 5.0 | **4.47 / 7.16 / 12.35** |
+| Switch II core 59–67 | 6.0 | **5.58 / 7.53 / 9.43** |
 
-The biggest trap is treating an ordinary, nucleotide-state-undefined KRAS model as if it were the owner’s G12D 1–169 protein in the relevant GDP- or GTP-loaded state. I tested this by reconstructing the model sequence from explicit mmCIF residue records and aligning it directly to the FASTA, then checking the pLDDT and PAE at the specified residue ranges. The result is uncomfortable but clear: the P-loop wins the supplied model-reliability comparison, but residue 12 is **G12 in the model and D12 in the assay**. Its high confidence does not certify the same local geometry for G12D.
+The construct PAE supports a tightly placed P-loop, with a within-region median of 1.03 Å. Its PAE values between candidate regions are also lower than the WT values. This does not cancel the lower construct pLDDT in the P-loop or switches: pLDDT and PAE answer different questions.
 
-The undefined nucleotide state also weakens interpretation of switch geometry. A switch-I/switch-II comparison may not represent the conformation used in the owner’s compound-design experiment. The data support a ranking of this model’s confidence, not biological truth about the pocket.
+## 5. Structure and sequence check
+
+The WT mmCIF is chain A, residues 1–189. The assay FASTA and construct fold are chain A, residues 1–169. Mapping through residue 169 is direct. The only sequence difference in that range is position 12: WT G versus construct D. WT residues 170–189 are absent from the assay construct and were excluded.
+
+The construct PDB contains coordinates and pLDDT in its B-factor column. The corrected WT PDB used for the static viewer also contains the mmCIF pLDDT values in its B-factor column; the earlier exported zero-B-factor PDB is not used as evidence.
+
+Coordinate orientations differ between predictions, so raw XYZ values were not interpreted as a conformational change. The observable local difference is that the construct model contains a D12 side chain while the WT model contains glycine. Both models retain a continuous, modelled P-loop; this supports a local geometry observation but not a biological mechanism.
 
 ## 6. The answer / recommendation
 
-Prioritise **P-loop residues 10–17** for the next design discussion, with residue 12 explicitly flagged as a construct-mismatch position. It has the highest local pLDDT (median 96.53; minimum 93.94), the lowest within-region PAE (1 Å off-diagonal median), and low relative PAE to both switch regions.
+**P-loop 10–17 is the leading construct-specific model-reliability region, but no primary ligand pocket can be assigned from these predictions alone.**
 
-This recommendation can be trusted only as **provisional model-reliability/design guidance** for the supplied AlphaFold model. It does not establish a ligand site, compound contact, binding, affinity, inhibition, or a GDP/GTP-specific switch arrangement.
+The P-loop remains the leading region for model-reliability and provisional design-guidance purposes in the G12D 1–169 construct: its median pLDDT is 87.05, above switch I at 68.17 and switch II at 65.59, and its within-region PAE is 1.03 Å. However, this is not a claim that the P-loop is the primary inhibitor pocket. A nucleotide-state-undefined prediction cannot establish which groove or region is occupied by the compound.
 
-## 7. Caveats & next steps
+Switch II may still be chemically relevant even though its predicted geometry is less reliable. Lower pLDDT or PAE values must not be converted into a claim about biological mechanism.
 
-The key biological caveat is the missing nucleotide state. KRAS switch regions can change with GDP versus GTP or analogue loading, so the model’s switch placement may be less representative of the state relevant to the compound series; this uncertainty can make the P-loop appear safer to prioritise than the state-dependent switches really are.
+## 7. The trap, caveat, and next steps
 
-Next, fold the actual G12D 1–169 sequence with the course fold service and compare its regional confidence and geometry. Then compare against an experimental KRAS structure in a matching nucleotide state, and test the compound with purified KRAS G12D under appropriate nucleotide-loading conditions. Use RAF-RBD recruitment/displacement or another functional assay, and test proposed contacts by mutation. None of these validations is present in the supplied files.
+The central trap was treating the WT AlphaFold reference as the owner’s G12D assay protein. The P-loop is part of the nucleotide-site region and D12 lies within it, so the reduced construct-specific confidence is relevant to interpreting the model. However, because the prediction does not define nucleotide-loading state or compound occupancy, it cannot determine whether the P-loop or switch II is the chemically relevant ligand region.
+
+The interview and supplied files do **not** document the assay’s actual nucleotide-loading condition. Whether the experiment uses GDP, GTP, or a nucleotide analogue remains an open experimental/context question; no GDP/GTP state is inferred from either prediction.
+
+Next, compare these predictions with an experimental KRAS structure in the relevant nucleotide state and test purified G12D KRAS under the documented or deliberately controlled loading conditions. Binding and functional assays, including RAF-RBD recruitment/displacement where appropriate, are still needed.
 
 ## 8. AI-use disclosure
 
-The coding agent created the Git/uv setup, inspected the transcript and files, reconstructed and checked the mmCIF sequence mapping, calculated the pLDDT and PAE summaries, rendered the pLDDT structure and PAE heatmap, and built the local FastAPI viewer. I verified the reported identity, chain count, residue coverage, FASTA length, G12D difference, tail overhang, confidence values, matrix dimensions, and visual agreement against the files in this folder. The owner’s requirements and biological context come from `ddls-week4-interview.md`; the analysis scope is specified in `spec.md`. The viewer outputs are in `results/`, including `results/kras_plddt_structure.png` and `results/kras_pae_heatmap.png`.
+The coding agent set up the environment, inspected the transcript and files, submitted the actual FASTA to the course fold service, saved the construct fold, calculated the focused comparisons, corrected the WT viewer PDB B-factors, and updated the report and presentation. I verified sequence identity, chain counts, residue coverage, D12/G12 mapping, matrix dimensions, confidence statistics, and the limits of coordinate comparison. Sources are `ddls-week4-interview.md` and `spec.md`.

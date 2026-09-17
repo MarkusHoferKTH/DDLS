@@ -1,9 +1,9 @@
 {
-  "headline": "The P-loop (residues 10–17) is the most reliable primary region in this model.",
-  "recommendation": "Prioritize residues 10–17 for provisional design guidance.",
-  "structure_check": "KRAS identity match, but not an exact assay-construct match: the model is a single-chain G12 KRAS model with residues 1–189, while the assay is G12D residues 1–169.",
+  "headline": "P-loop 10–17 is the leading construct-specific model-reliability region, but no primary ligand pocket can be assigned from these predictions alone.",
+  "recommendation": "Use residues 10–17 as provisional construct-specific model-reliability/design guidance, not as an inhibitor-pocket assignment.",
+  "structure_check": "WT AlphaFold reference: single-chain KRAS G12, residues 1–189; actual assay construct: single-chain KRAS G12D, residues 1–169. D12 lies inside P-loop 10–17.",
   "assembly": "Single-chain model; no multi-chain assembly or interface interpretation applies.",
-  "caveat": "The model has G12 rather than assay G12D and no defined GDP/GTP state, so its confidence does not prove the same local or switch geometry in the assay or that a compound binds.",
+  "caveat": "The two computational predictions differ, and neither defines nucleotide loading or compound occupancy. The P-loop leads for construct-specific model reliability, but no primary ligand pocket can be assigned.",
   "regions": [
     {"name":"P-loop","start":10,"end":17,"values":[97.00,95.31,93.94,94.06,97.00,96.94,97.38,96.12],"median":96.53,"mean":95.97,"min":93.94,"q1":95.00},
     {"name":"Switch I","start":30,"end":38,"values":[81.62,84.06,77.75,83.31,84.62,82.00,81.56,84.44,91.88],"median":83.31,"mean":83.47,"min":77.75,"q1":81.62},
